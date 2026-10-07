@@ -1,0 +1,51 @@
+CREATE DATABASE IF NOT EXISTS fitness_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE fitness_tracker;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(190) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    age INT UNSIGNED NULL,
+    gender VARCHAR(30) NULL,
+    height_cm DECIMAL(5,2) NULL,
+    weight_kg DECIMAL(5,2) NULL,
+    fitness_goal VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS workouts (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    workout_date DATE NOT NULL,
+    workout_type VARCHAR(100) NOT NULL,
+    duration_minutes INT UNSIGNED NOT NULL,
+    calories_burned INT UNSIGNED NULL,
+    notes TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_workouts_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS meals (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    meal_date DATE NOT NULL,
+    meal_type VARCHAR(50) NOT NULL,
+    food_name VARCHAR(150) NOT NULL,
+    calories INT UNSIGNED NOT NULL,
+    notes TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_meals_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS progress_logs (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    log_date DATE NOT NULL,
+    weight_kg DECIMAL(5,2) NOT NULL,
+    goal_note VARCHAR(255) NULL,
+    notes TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_progress_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
